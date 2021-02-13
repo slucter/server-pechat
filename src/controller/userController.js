@@ -89,7 +89,8 @@ module.exports = {
     },
     avatarUser: async (req, res) => {
         try {
-            res.send(req.file.filename)
+            const img = process.env.SRV_HOST + 'upload/' + req.file.filename
+            console.log(img);
         } catch (error) {
             console.log(error);
         }

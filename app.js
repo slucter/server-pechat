@@ -1,4 +1,5 @@
 require('dotenv').config()
+const express = require('express')
 const app = require('express')();
 const http = require('http').Server(app);
 const cors = require('cors')
@@ -13,6 +14,7 @@ const io = require('socket.io')(http, {
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json());
+app.use('/upload', express.static(__dirname+'/src/uploads'))
 app.use('/api',routes)
 app.use('/', (req, res) => {
     res.send('hello')
