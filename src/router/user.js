@@ -7,7 +7,7 @@ router
     .get('/:uuid', userController.getById)
     .post('/', userController.createUser)
     .post('/login', userController.loginUser)
+    .patch('/avatar/', authorization, upload.single('avatar'),validation, userController.avatarUser)
     .patch('/patchProfile/:user',userController.patchUser)
-    .patch('/avatar/:uuid',  upload.single('avatar'),validation, userController.avatarUser)
 
 module.exports = router

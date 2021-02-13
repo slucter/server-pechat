@@ -90,7 +90,9 @@ module.exports = {
     avatarUser: async (req, res) => {
         try {
             const img = process.env.SRV_HOST + 'upload/' + req.file.filename
-            console.log(img);
+            const dataToken = req.dataToken
+            const update = await knex('Users').where({uuid: dataToken.uuid}).update({avatar: img})
+            return response(res, 200, update === 1 ? 'success patch avatar' : 'failed', null)
         } catch (error) {
             console.log(error);
         }
