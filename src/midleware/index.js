@@ -1,11 +1,10 @@
 const multer = require('multer')
 const jwt = require('jsonwebtoken')
 const { response } = require('../helper/index')
-const path = require('path')
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, '../uploads')
+      cb(null, './src/uploads')
     },
     filename: function (req, file, cb) {
       cb(null, Date.now()+'-irhash-'+file.originalname)
@@ -26,7 +25,7 @@ const upload = multer({
 module.exports = {
     upload: upload,
     validation: (err, req, res, next) => {
-        response(res, { msg: err.code }, 200, null)
+        return response(res, 200, { msg: err.code }, null)
         next()
      },
      authorization: (req, res, next) => {

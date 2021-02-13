@@ -79,12 +79,19 @@ module.exports = {
     patchUser: async (req, res) => {
         try {
             const user = req.params.user
-            const body = req.body
+            const body = req.body // fuulname, username, email, bio
             const patch = await knex('Users').where({uuid: user}).update(body)
             return response(res, 200, patch, null)
         } catch (error) {
             console.log(error.message);
             return response(res, 500, error.message, null)
+        }
+    },
+    avatarUser: async (req, res) => {
+        try {
+            res.send(req.file.filename)
+        } catch (error) {
+            console.log(error);
         }
     }
 }
