@@ -1,4 +1,6 @@
 const multer = require('multer')
+const jwt = require('jsonwebtoken')
+const { response } = require('../helper/index')
 const path = require('path')
 
 const storage = multer.diskStorage({
@@ -26,6 +28,26 @@ module.exports = {
     validation: (err, req, res, next) => {
         response(res, { msg: err.code }, 200, null)
         next()
+     },
+     authorization: (req, res, next) => {
+       let token = req.headers.authorization;
+       if (token) {
+
+        token = token.split(' ')[0]
+        jwt.verify(token, process.env.JWT_KEY, (err, result) => {
+          if(err){
+            return res.status(403).json({
+            status: 'forbidden',
+            message: err
+            })
+          }
+          req.dataToken = result
+          return next()
+        })
+       } else {
+
+        return  response(res, 200, 'pls tokennya', null)
+       }
      }
 
 }

@@ -7,7 +7,8 @@ const { v4 : uuidv4 } = require('uuid')
 module.exports = {
     getAll: async (req, res) => {
         try {
-            const not = req.query.not;
+            const dataToken = req.dataToken
+            console.log(req.dataToken);
             const search = req.query.search;
             if (search) {
                 const q = await knex('Users').where('fullname', 'like', `%${search}%`)
@@ -16,7 +17,7 @@ module.exports = {
                 .select('*')
                 return response(res, 200, q, null)
             }
-            const q = await knex('Users').whereNot({uuid: not}).select('*')
+            const q = await knex('Users').whereNot({uuid: dataToken.uuid}).select('*')
             return response(res, 200, q, null)
         } catch (error) {
             console.log(error);
@@ -50,21 +51,24 @@ module.exports = {
     },
     loginUser: async (req, res) => {
         try {
-            const body = req.body
+            const body = {
+                email: req.body.email,
+                password: req.body.password
+            }
             const user = await knex('Users').where({email: body.email}).orWhere({username: body.email})
             if( user.length > 0 ) {
                 const compare = await bcrypt.compare(body.password, user[0].password)
                 if (compare) {
                     const user_data = user[0]
-                    const genToken  = jwt.sign({id: user_data.id, email: user_data.email}, process.env.JWT_KEY)
+                    const genToken  = jwt.sign({id: user_data.id, email: user_data.email, uuid: user_data.uuid}, process.env.JWT_KEY)
                     user_data.token = genToken
                     delete user_data.password
                     return  response(res, 200, user_data, null)
                 } else {
-                    return  response(res, 401, 'Password incorect!', null)
+                    return  response(res, 200, 'Password incorect!', true)
                 }
             } else {
-                return  response(res, 401, 'Email incorect / Not registered', null)
+                return  response(res, 200, 'Email incorect / Not registered', true)
             }
 
         } catch (error) {

@@ -10,9 +10,10 @@ const io = require('socket.io')(http, {
     }
 })
 
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use('/api',routes)
 app.use(cors())
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json());
+app.use('/api',routes)
 app.use('/', (req, res) => {
     res.send('hello')
 })

@@ -1,8 +1,9 @@
 const express = require('express')
 const router = express.Router()
 const userController = require('../controller/userController')
+const { authorization } = require('../midleware')
 router 
-    .get('/', userController.getAll)
+    .get('/', authorization,userController.getAll)
     .get('/:uuid', userController.getById)
     .post('/', userController.createUser)
     .post('/login', userController.loginUser)
