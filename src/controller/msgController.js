@@ -1,8 +1,5 @@
 const  knex  = require('../config/connect')
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
 const { response } = require('../helper/index')
-const { v4 : uuidv4 } = require('uuid')
 
 module.exports = {
     createMsg : async (req, res) => {
